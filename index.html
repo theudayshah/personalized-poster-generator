@@ -1,0 +1,81 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta name="description" content="Create and download personalized greeting posters in your browser.">
+  <title>Greeting Studio — Personalized Poster Generator</title>
+  <link rel="stylesheet" href="css/style.css">
+</head>
+<body>
+  <header class="site-header">
+    <a class="brand" href="#" aria-label="Greeting Studio home">
+      <span class="brand-mark">GS</span>
+      <span>Greeting<span class="brand-light">Studio</span></span>
+    </a>
+    <span class="header-note">Personalized posters · Made in your browser</span>
+  </header>
+
+  <main class="app-shell">
+    <section class="intro">
+      <p class="eyebrow">MAKE IT PERSONAL</p>
+      <h1>A little celebration,<br><span>made just for them.</span></h1>
+      <p class="intro-copy">Choose an occasion, add the details, preview your design, and download a ready-to-share poster.</p>
+    </section>
+
+    <section class="workspace" aria-label="Poster generator">
+      <div class="form-panel">
+        <div class="section-heading">
+          <span class="step-number">01</span>
+          <div><h2>Choose an occasion</h2><p>Start with what you're celebrating.</p></div>
+        </div>
+        <div class="occasion-grid" id="occasionGrid">
+          <button class="occasion-card active" type="button" data-category="birthday"><span class="occasion-icon">🎂</span><span>Birthday</span></button>
+          <button class="occasion-card" type="button" data-category="anniversary"><span class="occasion-icon">💍</span><span>Anniversary</span></button>
+          <button class="occasion-card" type="button" data-category="vehicle"><span class="occasion-icon">🚗</span><span>New vehicle</span></button>
+          <button class="occasion-card" type="button" data-category="newHome"><span class="occasion-icon">🏡</span><span>New home</span></button>
+          <button class="occasion-card" type="button" data-category="graduation"><span class="occasion-icon">🎓</span><span>Graduation</span></button>
+        </div>
+
+        <div class="section-heading details-heading">
+          <span class="step-number">02</span>
+          <div><h2>Add the details</h2><p>Your words make the poster special.</p></div>
+        </div>
+        <form id="posterForm">
+          <div id="dynamicFields"></div>
+          <div class="form-actions">
+            <button class="button button-secondary" type="button" id="resetButton">Reset</button>
+            <button class="button button-primary" type="submit">Download poster <span aria-hidden="true">↓</span></button>
+          </div>
+          <p class="privacy-note">🔒 Your details stay in this browser. Nothing is uploaded.</p>
+          <p class="status-message" id="statusMessage" role="status" aria-live="polite"></p>
+        </form>
+      </div>
+
+      <div class="preview-panel">
+        <div class="preview-topline">
+          <div><span class="step-number">03</span><span class="preview-label">LIVE PREVIEW</span></div>
+          <span class="preview-badge">PNG · High resolution</span>
+        </div>
+        <div class="poster-stage">
+          <canvas id="posterCanvas" width="1080" height="1350" aria-label="Preview of the personalized poster"></canvas>
+        </div>
+        <p class="preview-help">Preview updates as you type. Download to save the poster as a PNG image.</p>
+      </div>
+    </section>
+
+    <section class="how-it-works">
+      <div><span>01</span><h3>Pick an occasion</h3><p>Choose from the available poster categories.</p></div>
+      <div><span>02</span><h3>Personalize it</h3><p>Add names and optional details.</p></div>
+      <div><span>03</span><h3>Download & share</h3><p>Save a high-resolution PNG to your device.</p></div>
+    </section>
+  </main>
+
+  <footer class="site-footer">
+    <span>Greeting Studio</span><span>Designed for celebrations, big and small.</span>
+  </footer>
+  <script src="js/templates.js"></script>
+  <script src="js/poster-generator.js"></script>
+  <script src="js/app.js"></script>
+</body>
+</html>
