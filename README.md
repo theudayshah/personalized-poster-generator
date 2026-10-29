@@ -1,15 +1,19 @@
-HS Birthday Poster Maker — Self-contained version
-=================================================
+Poster Generator
+================
 
-This version embeds the poster image directly inside index.html. It does not load the poster from a separate file, avoiding the tainted-canvas export problem that can occur when opening local files.
+A simple website with four greeting poster designs:
+- Birthday
+- Anniversary (two names with an & symbol between them)
+- New Vehicle
+- Congratulations
+
+All poster images are embedded directly inside index.html.
 
 How to use:
-1. Extract the ZIP.
+1. Extract the ZIP into a folder.
 2. Open index.html in Chrome or Edge.
-3. Enter a first name and/or last name.
-4. Click “Download birthday poster”.
-5. The PNG will download as birthday-poster.png.
+3. Choose a poster type.
+4. Enter the name. For Anniversary, enter both people's names.
+5. Click Download poster PNG.
 
-The name is drawn directly over the central HS logo. No box, nameplate, or background patch is added.
-
-If Chrome still blocks downloads, check Chrome's Downloads list and allow downloads for the page if prompted.
+The name is drawn directly over the central HS logo without a box or background patch.
