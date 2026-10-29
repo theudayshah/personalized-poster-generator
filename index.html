@@ -1,4 +1,4 @@
-<!DOCTYPE html>
+<!-- <!DOCTYPE html>
 <html lang="en">
 <head>
   <meta charset="UTF-8">
@@ -77,5 +77,514 @@
   <script src="js/templates.js"></script>
   <script src="js/poster-generator.js"></script>
   <script src="js/app.js"></script>
+</body>
+</html> -->
+
+
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Harsh Shah - Poster Generator</title>
+    <!-- Tailwind CSS -->
+    <script src="https://cdn.tailwindcss.com"></script>
+    <!-- FontAwesome Icons -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <!-- Google Fonts -->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Cinzel:wght@500;700;800&family=Great+Vibes&family=Inter:wght@300;400;500;600;700&family=Montserrat:wght@400;600;700;800&family=Playfair+Display:ital,wght@0,600;0,700;1,600&display=swap" rel="stylesheet">
+    <!-- html2canvas library for export -->
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/html2canvas/1.4.1/html2canvas.min.js"></script>
+    
+    <script>
+        tailwind.config = {
+            theme: {
+                extend: {
+                    colors: {
+                        navy: {
+                            800: '#0a192f',
+                            900: '#030d1e',
+                        },
+                        gold: {
+                            400: '#fbbf24',
+                            500: '#f59e0b',
+                            600: '#d97706',
+                        }
+                    },
+                    fontFamily: {
+                        sans: ['Inter', 'sans-serif'],
+                        serif: ['Playfair Display', 'serif'],
+                        cursive: ['Great Vibes', 'cursive'],
+                        cinzel: ['Cinzel', 'serif'],
+                        montserrat: ['Montserrat', 'sans-serif'],
+                    }
+                }
+            }
+        }
+    </script>
+    <style>
+        /* Custom styles & theme-specific gradient animations */
+        .poster-canvas {
+            width: 500px;
+            height: 625px; /* Aspect Ratio 4:5 optimized for WhatsApp & Social Media */
+            position: relative;
+            overflow: hidden;
+            box-shadow: 0 20px 25px -5px rgba(0, 0, 0, 0.3), 0 10px 10px -5px rgba(0, 0, 0, 0.2);
+            flex-shrink: 0;
+        }
+
+        /* Watermark HS Logo Styling - Precise vector representation matching uploaded monogram */
+        .hs-logo-svg {
+            position: absolute;
+            top: 48%;
+            left: 50%;
+            transform: translate(-50%, -50%);
+            width: 320px;
+            height: 320px;
+            pointer-events: none;
+            z-index: 1;
+            opacity: 0.14;
+        }
+
+        /* Category Themes */
+        .theme-birthday {
+            background: linear-gradient(135deg, #1a1c2e 0%, #0f101d 100%);
+            color: #ffffff;
+            border: 12px solid #232742;
+        }
+        .theme-birthday .accent-text { color: #f43f5e; }
+        .theme-birthday .gold-accent { color: #fbbf24; }
+
+        .theme-anniversary {
+            background: linear-gradient(135deg, #1f1124 0%, #0f0714 100%);
+            color: #ffffff;
+            border: 12px solid #33193a;
+        }
+        .theme-anniversary .accent-text { color: #ec4899; }
+        .theme-anniversary .gold-accent { color: #f59e0b; }
+
+        .theme-vehicle {
+            background: linear-gradient(135deg, #0b1e36 0%, #040c17 100%);
+            color: #ffffff;
+            border: 12px solid #132a48;
+        }
+        .theme-vehicle .accent-text { color: #38bdf8; }
+        .theme-vehicle .gold-accent { color: #fbbf24; }
+
+        .theme-home {
+            background: linear-gradient(135deg, #062c21 0%, #02140e 100%);
+            color: #ffffff;
+            border: 12px solid #0d4334;
+        }
+        .theme-home .accent-text { color: #34d399; }
+        .theme-home .gold-accent { color: #fbbf24; }
+
+        .theme-congrats {
+            background: linear-gradient(135deg, #2a1b08 0%, #120b02 100%);
+            color: #ffffff;
+            border: 12px solid #422c10;
+        }
+        .theme-congrats .accent-text { color: #fbbf24; }
+        .theme-congrats .gold-accent { color: #f59e0b; }
+
+        /* Custom Scrollbar for sidebar */
+        ::-webkit-scrollbar {
+            width: 6px;
+        }
+        ::-webkit-scrollbar-track {
+            background: #1f2937;
+        }
+        ::-webkit-scrollbar-thumb {
+            background: #4b5563;
+            border-radius: 3px;
+        }
+    </style>
+</head>
+<body class="bg-gray-900 text-gray-100 font-sans min-h-screen flex flex-col">
+
+    <!-- Navbar Header -->
+    <header class="bg-gray-800 border-b border-gray-700 py-4 px-6 sticky top-0 z-50">
+        <div class="max-w-7xl mx-auto flex justify-between items-center">
+            <div class="flex items-center space-x-3">
+                <!-- Mini Logo -->
+                <div class="w-10 h-10 bg-blue-900 rounded-lg flex items-center justify-center font-serif font-bold text-white text-lg border border-blue-400">
+                    HS
+                </div>
+                <div>
+                    <h1 class="text-xl font-bold tracking-wide text-white">Harsh Shah</h1>
+                    <p class="text-xs text-blue-400 font-medium">Financial Advisor Poster Studio</p>
+                </div>
+            </div>
+            <div class="text-sm text-gray-400 hidden sm:block">
+                <i class="fa-solid fa-wand-magic-sparkles text-amber-400 mr-2"></i>Quick Client Wish Generator
+            </div>
+        </div>
+    </header>
+
+    <!-- Main Container -->
+    <main class="flex-1 max-w-7xl w-full mx-auto p-4 sm:p-6 lg:p-8 flex flex-col lg:flex-row gap-8 items-start justify-center">
+        
+        <!-- Controls Panel (Left Side) -->
+        <section class="w-full lg:w-5/12 bg-gray-800 border border-gray-700 rounded-2xl p-6 shadow-xl">
+            <h2 class="text-lg font-semibold text-white mb-5 flex items-center border-b border-gray-700 pb-3">
+                <i class="fa-solid fa-sliders text-blue-400 mr-2.5"></i> Customization Options
+            </h2>
+
+            <!-- Category Selector -->
+            <div class="mb-6">
+                <label class="block text-xs font-semibold text-gray-400 uppercase tracking-wider mb-2">Select Occasion Category</label>
+                <div class="grid grid-cols-2 sm:grid-cols-3 gap-2" id="categoryTabs">
+                    <button type="button" onclick="selectCategory('birthday')" id="btn-birthday" class="category-btn active bg-blue-600 text-white p-2.5 rounded-xl text-xs font-medium flex flex-col items-center justify-center gap-1.5 transition-all duration-200 border border-transparent">
+                        <i class="fa-solid fa-cake-candles text-base"></i> Birthday
+                    </button>
+                    <button type="button" onclick="selectCategory('anniversary')" id="btn-anniversary" class="category-btn bg-gray-700 hover:bg-gray-650 text-gray-300 p-2.5 rounded-xl text-xs font-medium flex flex-col items-center justify-center gap-1.5 transition-all duration-200 border border-transparent">
+                        <i class="fa-solid fa-heart text-base"></i> Anniversary
+                    </button>
+                    <button type="button" onclick="selectCategory('vehicle')" id="btn-vehicle" class="category-btn bg-gray-700 hover:bg-gray-650 text-gray-300 p-2.5 rounded-xl text-xs font-medium flex flex-col items-center justify-center gap-1.5 transition-all duration-200 border border-transparent">
+                        <i class="fa-solid fa-car text-base"></i> New Vehicle
+                    </button>
+                    <button type="button" onclick="selectCategory('home')" id="btn-home" class="category-btn bg-gray-700 hover:bg-gray-650 text-gray-300 p-2.5 rounded-xl text-xs font-medium flex flex-col items-center justify-center gap-1.5 transition-all duration-200 border border-transparent">
+                        <i class="fa-solid fa-house-chimney text-base"></i> New Home
+                    </button>
+                    <button type="button" onclick="selectCategory('congrats')" id="btn-congrats" class="category-btn bg-gray-700 hover:bg-gray-650 text-gray-300 p-2.5 rounded-xl text-xs font-medium flex flex-col items-center justify-center gap-1.5 transition-all duration-200 border border-transparent col-span-2 sm:col-span-1">
+                        <i class="fa-solid fa-trophy text-base"></i> Congrats
+                    </button>
+                </div>
+            </div>
+
+            <!-- Dynamic Input Fields Form -->
+            <div class="space-y-4 mb-6 bg-gray-900/50 p-4 rounded-xl border border-gray-700/50">
+                <div id="singleNameFields" class="space-y-4">
+                    <div>
+                        <label for="firstName" id="lblFirstName" class="block text-xs font-medium text-gray-300 mb-1">First Name</label>
+                        <input type="text" id="firstName" oninput="updatePosterText()" placeholder="e.g. Rahul" class="w-full bg-gray-800 border border-gray-600 rounded-lg px-3.5 py-2.5 text-sm text-white focus:outline-none focus:border-blue-500 transition-colors">
+                    </div>
+                    <div>
+                        <label for="lastName" id="lblLastName" class="block text-xs font-medium text-gray-300 mb-1">Last Name</label>
+                        <input type="text" id="lastName" oninput="updatePosterText()" placeholder="e.g. Sharma" class="w-full bg-gray-800 border border-gray-600 rounded-lg px-3.5 py-2.5 text-sm text-white focus:outline-none focus:border-blue-500 transition-colors">
+                    </div>
+                </div>
+
+                <!-- Fields dedicated for Anniversary -->
+                <div id="anniversaryNameFields" class="space-y-4 hidden">
+                    <div>
+                        <label for="partner1" class="block text-xs font-medium text-gray-300 mb-1">Partner 1 Name</label>
+                        <input type="text" id="partner1" oninput="updatePosterText()" placeholder="e.g. Rahul" class="w-full bg-gray-800 border border-gray-600 rounded-lg px-3.5 py-2.5 text-sm text-white focus:outline-none focus:border-blue-500 transition-colors">
+                    </div>
+                    <div>
+                        <label for="partner2" class="block text-xs font-medium text-gray-300 mb-1">Partner 2 Name</label>
+                        <input type="text" id="partner2" oninput="updatePosterText()" placeholder="e.g. Priya" class="w-full bg-gray-800 border border-gray-600 rounded-lg px-3.5 py-2.5 text-sm text-white focus:outline-none focus:border-blue-500 transition-colors">
+                    </div>
+                </div>
+
+                <!-- Custom Message Option -->
+                <div>
+                    <label for="customSubtitle" class="block text-xs font-medium text-gray-300 mb-1">Sub-heading Note (Optional)</label>
+                    <input type="text" id="customSubtitle" oninput="updatePosterText()" placeholder="e.g. Wishing you prosperity & happiness!" class="w-full bg-gray-800 border border-gray-600 rounded-lg px-3.5 py-2.5 text-sm text-white focus:outline-none focus:border-blue-500 transition-colors">
+                </div>
+            </div>
+
+            <!-- Action Button -->
+            <button type="button" onclick="downloadPoster()" class="w-full bg-emerald-600 hover:bg-emerald-500 text-white font-semibold py-3.5 px-4 rounded-xl shadow-lg transition-all duration-200 flex items-center justify-center gap-2 text-sm group">
+                <i class="fa-solid fa-download group-hover:scale-110 transition-transform"></i> Download High-Res Poster
+            </button>
+            <p class="text-xs text-center text-gray-400 mt-3">
+                <i class="fa-regular fa-image mr-1"></i> Saves as crisp PNG ready to send on WhatsApp
+            </p>
+        </section>
+
+        <!-- Live Poster Preview Area (Right Side) -->
+        <section class="w-full lg:w-7/12 flex flex-col items-center">
+            <div class="mb-3 w-full max-w-[500px] flex justify-between items-center text-xs text-gray-400 px-1">
+                <span class="font-medium text-gray-300"><i class="fa-solid fa-eye text-blue-400 mr-1.5"></i> Live Canvas Preview</span>
+                <span>Aspect Ratio 4:5</span>
+            </div>
+
+            <!-- Canvas Container Wrapper -->
+            <div class="w-full overflow-x-auto flex justify-center pb-4">
+                <div id="posterCanvas" class="poster-canvas theme-birthday flex flex-col justify-between p-6 rounded-2xl relative select-none">
+                    
+                    <!-- Exact Replica Monogram Vector Logo (Interlocking H, S and Swoosh Loop) -->
+                    <svg class="hs-logo-svg" viewBox="0 0 320 320" xmlns="http://www.w3.org/2000/svg">
+                        <g fill="#FFFFFF">
+                            <!-- SERIF LETTER 'H' -->
+                            <!-- Left Stem with Serifs -->
+                            <path d="M 75 50 h 42 v 8 h -12 v 110 h 12 v 8 h -42 v -8 h 12 v -110 h -12 z"/>
+                            <!-- Right Stem with Serifs -->
+                            <path d="M 148 50 h 42 v 8 h -12 v 110 h 12 v 8 h -42 v -8 h 12 v -110 h -12 z"/>
+                            <!-- Crossbar -->
+                            <path d="M 105 110 h 55 v 8 h -55 z"/>
+
+                            <!-- SERIF LETTER 'S' -->
+                            <path d="M 232 108 c -4 -12 -16 -18 -32 -18 c -18 0 -28 10 -28 22 c 0 32 60 22 60 58 c 0 22 -18 36 -42 36 c -20 0 -36 -11 -40 -26 h 12 c 3 10 14 16 28 16 c 15 0 28 -8 28 -24 c 0 -34 -60 -24 -60 -58 c 0 -18 15 -32 40 -32 c 18 0 34 8 40 22 z"/>
+                        </g>
+                        <!-- SWOOSH & BOTTOM LOOP -->
+                        <g fill="none" stroke="#FFFFFF" stroke-linecap="round">
+                            <!-- Left Swirl Oval traversing through H -->
+                            <path d="M 160 102 C 100 85 40 100 40 142 C 40 188 115 200 170 198" stroke-width="4.5"/>
+                            <!-- Bottom Loop beneath S and Swash Tail -->
+                            <path d="M 170 198 C 215 196 262 208 260 236 C 258 266 200 270 172 250 C 150 232 178 208 210 210 C 240 212 280 225 295 218" stroke-width="4.5"/>
+                        </g>
+                    </svg>
+
+                    <!-- Top Header Section -->
+                    <div class="flex justify-between items-start z-10">
+                        <!-- Left Top Decoration Motif -->
+                        <div class="flex items-center space-x-2 opacity-80" id="headerCategoryBadge">
+                            <span class="w-2 h-2 rounded-full bg-amber-400 inline-block"></span>
+                            <span class="text-xs uppercase tracking-widest font-semibold font-montserrat text-gray-300" id="badgeText">Birthday Greetings</span>
+                        </div>
+
+                        <!-- Right Top Client Branding (Mandatory Requirement) -->
+                        <div class="text-right border-l-2 border-amber-400/60 pl-3">
+                            <h3 class="text-base font-bold font-montserrat tracking-tight text-white leading-tight">Harsh Shah</h3>
+                            <p class="text-[11px] font-medium text-amber-400 tracking-wide uppercase">Financial Advisor</p>
+                        </div>
+                    </div>
+
+                    <!-- Center Main Content -->
+                    <div class="my-auto text-center z-10 py-4 flex flex-col items-center justify-center">
+                        
+                        <!-- Dynamic Icon Motif -->
+                        <div id="centerIcon" class="text-4xl mb-3 text-amber-400 filter drop-shadow">
+                            <i class="fa-solid fa-cake-candles"></i>
+                        </div>
+
+                        <!-- Main Title Greeting -->
+                        <h2 id="posterMainHeading" class="text-2xl sm:text-3xl font-cinzel font-bold tracking-wider text-amber-300 uppercase mb-2 drop-shadow-md">
+                            Happy Birthday
+                        </h2>
+
+                        <!-- Dynamic Recipient Name -->
+                        <div class="my-3 py-1 px-4 min-h-[60px] flex items-center justify-center">
+                            <h1 id="posterRecipientName" class="text-4xl sm:text-5xl font-cursive font-normal text-white drop-shadow-lg leading-relaxed">
+                                Dear Valued Client
+                            </h1>
+                        </div>
+
+                        <!-- Subtitle / Wish message -->
+                        <p id="posterSubMessage" class="text-xs sm:text-sm font-sans font-light text-gray-200 max-w-xs mx-auto leading-relaxed opacity-90">
+                            Wishing you a fantastic day filled with happiness, health, and abundant prosperity!
+                        </p>
+                    </div>
+
+                    <!-- Footer Section (Client Services Grid - Mandatory Requirement) -->
+                    <div class="z-10 border-t border-white/15 pt-3.5 mt-auto">
+                        <div class="text-[10px] font-montserrat uppercase tracking-wider text-amber-400/90 text-center mb-2 font-semibold">
+                            Our Financial & Advisory Services
+                        </div>
+                        <div class="grid grid-cols-2 gap-y-1.5 gap-x-3 text-[11px] font-sans text-gray-200">
+                            <div class="flex items-center space-x-1.5 bg-white/5 px-2.5 py-1 rounded-md border border-white/5">
+                                <i class="fa-solid fa-shield-halved text-amber-400 text-[10px]"></i>
+                                <span class="truncate">Life / Term / General Insurance</span>
+                            </div>
+                            <div class="flex items-center space-x-1.5 bg-white/5 px-2.5 py-1 rounded-md border border-white/5">
+                                <i class="fa-solid fa-chart-line text-amber-400 text-[10px]"></i>
+                                <span class="truncate">Mutual Fund / SIP</span>
+                            </div>
+                            <div class="flex items-center space-x-1.5 bg-white/5 px-2.5 py-1 rounded-md border border-white/5">
+                                <i class="fa-solid fa-building-columns text-amber-400 text-[10px]"></i>
+                                <span class="truncate">Post Office Recurring / FD</span>
+                            </div>
+                            <div class="flex items-center space-x-1.5 bg-white/5 px-2.5 py-1 rounded-md border border-white/5">
+                                <i class="fa-solid fa-vault text-amber-400 text-[10px]"></i>
+                                <span class="truncate">RBI Bonds / Other FD's</span>
+                            </div>
+                        </div>
+                    </div>
+
+                </div>
+            </div>
+        </section>
+    </main>
+
+    <!-- Footer Disclaimer -->
+    <footer class="bg-gray-800 border-t border-gray-700 py-3 text-center text-xs text-gray-400 mt-auto">
+        Designed for Harsh Shah | Financial Advisory Client Engagement Tool
+    </footer>
+
+    <!-- JavaScript Logic -->
+    <script>
+        // State management
+        let currentCategory = 'birthday';
+
+        // Configuration for Categories
+        const categoryConfigs = {
+            birthday: {
+                badge: 'Birthday Greetings',
+                heading: 'Happy Birthday',
+                icon: 'fa-solid fa-cake-candles',
+                defaultSubMessage: 'Wishing you a fantastic day filled with joy, prosperity, and great health!',
+                themeClass: 'theme-birthday'
+            },
+            anniversary: {
+                badge: 'Anniversary Wishes',
+                heading: 'Happy Anniversary',
+                icon: 'fa-solid fa-heart-circle-bolt',
+                defaultSubMessage: 'Wishing you both a lifetime of love, warmth, togetherness and financial happiness!',
+                themeClass: 'theme-anniversary'
+            },
+            vehicle: {
+                badge: 'New Vehicle Wishes',
+                heading: 'Congratulations!',
+                icon: 'fa-solid fa-car-side',
+                defaultSubMessage: 'Wishing you many safe, joyful journeys and memories with your brand new vehicle!',
+                themeClass: 'theme-vehicle'
+            },
+            home: {
+                badge: 'New Home Wishes',
+                heading: 'Happy Housewarming',
+                icon: 'fa-solid fa-house-chimney-window',
+                defaultSubMessage: 'May your new home be blessed with love, peace, health and endless prosperous moments!',
+                themeClass: 'theme-home'
+            },
+            congrats: {
+                badge: 'Warm Wishes',
+                heading: 'Heartiest Congratulations',
+                icon: 'fa-solid fa-award',
+                defaultSubMessage: 'Celebrating your marvelous milestone! Wishing you continued success in all endeavors.',
+                themeClass: 'theme-congrats'
+            }
+        };
+
+        // Select category logic
+        function selectCategory(category) {
+            currentCategory = category;
+
+            // Update tab button styles
+            const buttons = document.querySelectorAll('.category-btn');
+            buttons.forEach(btn => {
+                btn.classList.remove('bg-blue-600', 'text-white');
+                btn.classList.add('bg-gray-700', 'text-gray-300');
+            });
+
+            const activeBtn = document.getElementById(`btn-${category}`);
+            if (activeBtn) {
+                activeBtn.classList.remove('bg-gray-700', 'text-gray-300');
+                activeBtn.classList.add('bg-blue-600', 'text-white');
+            }
+
+            // Switch input field groups
+            const singleFields = document.getElementById('singleNameFields');
+            const anniversaryFields = document.getElementById('anniversaryNameFields');
+
+            if (category === 'anniversary') {
+                singleFields.classList.add('hidden');
+                anniversaryFields.classList.remove('hidden');
+            } else {
+                singleFields.classList.remove('hidden');
+                anniversaryFields.classList.add('hidden');
+            }
+
+            // Apply Theme to Canvas
+            const posterCanvas = document.getElementById('posterCanvas');
+            posterCanvas.className = `poster-canvas ${categoryConfigs[category].themeClass} flex flex-col justify-between p-6 rounded-2xl relative select-none`;
+
+            // Update Badge & Icon
+            document.getElementById('badgeText').innerText = categoryConfigs[category].badge;
+            document.getElementById('posterMainHeading').innerText = categoryConfigs[category].heading;
+            
+            const centerIcon = document.getElementById('centerIcon');
+            centerIcon.innerHTML = `<i class="${categoryConfigs[category].icon}"></i>`;
+
+            // Update Name and Text Preview
+            updatePosterText();
+        }
+
+        // Live Preview Updater
+        function updatePosterText() {
+            const config = categoryConfigs[currentCategory];
+            const recipientElement = document.getElementById('posterRecipientName');
+            const subMessageElement = document.getElementById('posterSubMessage');
+            const customSubtitleVal = document.getElementById('customSubtitle').value.trim();
+
+            let formattedName = '';
+
+            if (currentCategory === 'anniversary') {
+                const p1 = document.getElementById('partner1').value.trim();
+                const p2 = document.getElementById('partner2').value.trim();
+
+                if (p1 && p2) {
+                    formattedName = `${p1} & ${p2}`;
+                } else if (p1) {
+                    formattedName = p1;
+                } else if (p2) {
+                    formattedName = p2;
+                } else {
+                    formattedName = 'Dear Couple';
+                }
+            } else {
+                const fn = document.getElementById('firstName').value.trim();
+                const ln = document.getElementById('lastName').value.trim();
+
+                if (fn && ln) {
+                    formattedName = `${fn} ${ln}`;
+                } else if (fn) {
+                    formattedName = fn;
+                } else if (ln) {
+                    formattedName = ln;
+                } else {
+                    formattedName = 'Valued Client';
+                }
+            }
+
+            // Set Name with gentle animation trigger
+            recipientElement.innerText = formattedName;
+
+            // Set Custom Subtitle if entered, otherwise default
+            if (customSubtitleVal !== '') {
+                subMessageElement.innerText = customSubtitleVal;
+            } else {
+                subMessageElement.innerText = config.defaultSubMessage;
+            }
+        }
+
+        // Download High Resolution Image using html2canvas
+        function downloadPoster() {
+            const posterElement = document.getElementById('posterCanvas');
+
+            // Feedback visual UI
+            const downloadBtn = document.querySelector('button[onclick="downloadPoster()"]');
+            const originalBtnContent = downloadBtn.innerHTML;
+            downloadBtn.innerHTML = `<i class="fa-solid fa-spinner fa-spin"></i> Generating Poster...`;
+            downloadBtn.disabled = true;
+
+            // Options for HD export rendering
+            const options = {
+                scale: 3, // High DPI resolution for crisp text & graphics
+                useCORS: true,
+                allowTaint: true,
+                backgroundColor: null,
+                logging: false
+            };
+
+            html2canvas(posterElement, options).then(canvas => {
+                // Generate filename based on category and name
+                const clientName = document.getElementById('posterRecipientName').innerText.replace(/[^a-zA-Z0-9]/g, "_");
+                const fileName = `Harsh_Shah_Wish_${currentCategory}_${clientName}.png`;
+
+                // Download link trigger
+                const link = document.createElement('a');
+                link.download = fileName;
+                link.href = canvas.toDataURL('image/png', 1.0);
+                link.click();
+
+                // Restore Button State
+                downloadBtn.innerHTML = originalBtnContent;
+                downloadBtn.disabled = false;
+            }).catch(err => {
+                console.error('Error generating image:', err);
+                downloadBtn.innerHTML = originalBtnContent;
+                downloadBtn.disabled = false;
+            });
+        }
+
+        // Initialize default view on load
+        window.onload = function() {
+            selectCategory('birthday');
+        };
+    </script>
 </body>
 </html>
